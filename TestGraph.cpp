@@ -267,3 +267,79 @@ TEST_CASE("Test: shortets path on small Graph")
 
 }
 
+TEST_CASE("Test: MST on small Graph") {
+	std::vector<std::string> nodes;
+	std::vector<std::tuple<std::string, std::string, int>> edges;
+	std::string typeOfGraph;
+	readFromFile(std::string("graph01_U.txt"), typeOfGraph, nodes, edges);
+	Graph<std::string>::GRAPH_TYPE type;
+	if (typeOfGraph == "U")
+		type = Graph<std::string>::GRAPH_TYPE::UNDIRECTED;
+	else
+		type = Graph<std::string>::GRAPH_TYPE::DIRECTED;
+
+	Graph<std::string> graph(type, nodes, edges);
+	std::vector<std::tuple<std::string, std::string, int>> mst;
+	std::vector<std::tuple<std::string, std::string, int>> correctMST = {
+		std::make_tuple("s", "t", 1),
+		std::make_tuple("y", "z", 2),
+		std::make_tuple("t", "y", 3),
+		std::make_tuple("x", "z", 6)
+	};
+	graph.MST(mst);
+	REQUIRE(mst == correctMST);
+}
+
+
+TEST_CASE("Test: MST on text file 2") {
+	std::vector<std::string> nodes;
+	std::vector<std::tuple<std::string, std::string, int>> edges;
+	std::string typeOfGraph;
+	readFromFile(std::string("graph02_D.txt"), typeOfGraph, nodes, edges);
+	Graph<std::string>::GRAPH_TYPE type;
+	if (typeOfGraph == "U")
+		type = Graph<std::string>::GRAPH_TYPE::UNDIRECTED;
+	else
+		type = Graph<std::string>::GRAPH_TYPE::DIRECTED;
+
+	Graph<std::string> graph(type, nodes, edges);
+	std::vector<std::tuple<std::string, std::string, int>> mst;
+	std::vector<std::tuple<std::string, std::string, int>> correctMST = {
+		std::make_tuple("d", "e", 1),
+		std::make_tuple("e", "c", 2),
+		std::make_tuple("d", "a", 3),
+		std::make_tuple("b", "c", 4)
+	};
+	graph.MST(mst);
+	REQUIRE(mst == correctMST);
+}
+
+
+TEST_CASE("Test: MST on text file 3") {
+	std::vector<std::string> nodes;
+	std::vector<std::tuple<std::string, std::string, int>> edges;
+	std::string typeOfGraph;
+	readFromFile(std::string("graph03_D.txt"), typeOfGraph, nodes, edges);
+	Graph<std::string>::GRAPH_TYPE type;
+	if (typeOfGraph == "U")
+		type = Graph<std::string>::GRAPH_TYPE::UNDIRECTED;
+	else
+		type = Graph<std::string>::GRAPH_TYPE::DIRECTED;
+
+	Graph<std::string> graph(type, nodes, edges);
+	std::vector<std::tuple<std::string, std::string, int>> mst;
+	std::vector<std::tuple<std::string, std::string, int>> correctMST = {
+		std::make_tuple("h", "i", 1),
+		std::make_tuple("d", "g", 2),
+		std::make_tuple("e", "i", 3),
+		std::make_tuple("e", "d", 4),
+		std::make_tuple("e", "c", 5),
+		std::make_tuple("f", "i", 5),
+		std::make_tuple("e", "b", 7),
+		std::make_tuple("d", "a", 8)
+	};
+
+	graph.MST(mst);
+	REQUIRE(mst == correctMST);
+}
+

@@ -89,8 +89,8 @@ int Graph<T>::getWeight(const T& from, const T& to) const
 
 template <typename T>
 void Graph<T>::shortestPathFrom(T from, T to, std::vector<std::pair<T, int>>& shortestPath) const {
-    // Skapa en mängd för ohanterade noder och en karta för att spåra tidigare noder
-    std::set<std::pair<int, T>> unvisitedNodes;
+    // Skapa en prioritetskö för ohanterade noder och en hashmap för att spåra tidigare noder
+    std::priority_queue<std::pair<int, T>, std::vector<std::pair<int, T>>, std::greater<>> unvisitedNodes;
     std::unordered_map<T, T> previousNodes;
 
     // Sätt alla avstånd till oändligt förutom från-noden, som är 0
@@ -107,8 +107,8 @@ void Graph<T>::shortestPathFrom(T from, T to, std::vector<std::pair<T, int>>& sh
 
     while (!unvisitedNodes.empty()) {
         // Välj noden med lägst avstånd som nästa nod att hantera
-        auto current = unvisitedNodes.begin()->second;
-        unvisitedNodes.erase(unvisitedNodes.begin());
+        auto current = unvisitedNodes.top().second;
+        unvisitedNodes.pop();
 
         // Om vi har nått till-noden, så är kortaste vägen hittad och vi kan avsluta
         if (current == to) {
@@ -119,10 +119,9 @@ void Graph<T>::shortestPathFrom(T from, T to, std::vector<std::pair<T, int>>& sh
         for (const auto& neighbor : adjList.at(current)) {
             auto newDistance = distances[current] + neighbor.second;
             if (newDistance < distances[neighbor.first]) {
-                unvisitedNodes.erase({ distances[neighbor.first], neighbor.first });
+                unvisitedNodes.emplace(newDistance, neighbor.first);
                 distances[neighbor.first] = newDistance;
                 previousNodes[neighbor.first] = current;
-                unvisitedNodes.emplace(distances[neighbor.first], neighbor.first);
             }
         }
     }
