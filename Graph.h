@@ -18,11 +18,7 @@ class Graph
 public:
 	enum class GRAPH_TYPE { DIRECTED, UNDIRECTED };
 private:
-	/*
-
-	for you to decide on members and internal datatypes and datastructures
-
-	*/
+	std::unordered_map<T, int> nodeIndices;
 	std::map<T, std::vector<std::pair<T, int>>> adjList;
 	GRAPH_TYPE graphType;
 	int findIndex(const T& node) const;

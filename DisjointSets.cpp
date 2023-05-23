@@ -9,17 +9,28 @@ DisjointSets::DisjointSets(int nrOfSets)
     }
 }
 
-DisjointSets::~DisjointSets()
+DisjointSets::DisjointSets(const DisjointSets& other)
+    : parent(other.parent), rank(other.rank), numSets(other.numSets), currentNumSets(other.currentNumSets){}
+
+DisjointSets& DisjointSets::operator=(const DisjointSets& other)
 {
+    if (this == &other) {
+        return *this;
+    }
+
+    parent = other.parent;
+    rank = other.rank;
+    numSets = other.numSets;
+    currentNumSets = other.currentNumSets;
+
+    return *this;
 }
 
 int DisjointSets::findSet(int element)
 {
-    if (parent[element] != element) {
-        // Path compression: make every visited node point to the root directly.
-        parent[element] = findSet(parent[element]);
-    }
-    return parent[element];
+    if (element == parent[element])
+        return element;
+    return parent[element] = findSet(parent[element]);
 }
 
 void DisjointSets::unionSets(int set1, int set2)

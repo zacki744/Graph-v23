@@ -14,9 +14,8 @@ private:
 	int currentNumSets;      // the current number of disjoint sets
 public:
 	DisjointSets(int nrOfSets);
-	DisjointSets(const DisjointSets& other) = delete;
-	DisjointSets& operator=(const DisjointSets& other) = delete;
-	~DisjointSets();
+	DisjointSets(const DisjointSets& other);
+	DisjointSets& operator=(const DisjointSets& other);
 
 	int findSet(int set);
 	void unionSets(int setOne, int setTwo);

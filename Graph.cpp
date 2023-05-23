@@ -25,6 +25,11 @@ Graph<T>::Graph(GRAPH_TYPE graphType, std::vector<T> nodes, std::vector<std::tup
             adjList[to].push_back({ from, weight });
         }
     }
+    int index = 0;
+    for (const auto& u : adjList) {
+        const T& node = u.first;
+        nodeIndices[node] = index++;
+    }
 }
 
 template <typename T>
@@ -92,9 +97,9 @@ void Graph<T>::shortestPathFrom(T from, T to, std::vector<std::pair<T, int>>& sh
     // Skapa en prioritetskö för ohanterade noder och en hashmap för att spåra tidigare noder
     std::priority_queue<std::pair<int, T>, std::vector<std::pair<int, T>>, std::greater<>> unvisitedNodes;
     std::unordered_map<T, T> previousNodes;
+    std::unordered_map<T, int> distances;
 
     // Sätt alla avstånd till oändligt förutom från-noden, som är 0
-    std::unordered_map<T, int> distances;
     for (const auto& node : adjList) {
         if (node.first == from) {
             distances[node.first] = 0;
@@ -148,12 +153,9 @@ void Graph<T>::shortestPathFrom(T from, T to, std::vector<std::pair<T, int>>& sh
 template <typename T>
 int Graph<T>::findIndex(const T& node) const
 {
-    int i = 0;
-    for (const auto& n : adjList) {
-        if (n.first == node) {
-            return i;
-        }
-        i++;
+    auto it = nodeIndices.find(node);
+    if (it != nodeIndices.end()) {
+        return it->second;
     }
     return -1; // node not found
 }
@@ -173,15 +175,15 @@ void Graph<T>::MST(std::vector<std::tuple<T, T, int>>& mst)
 {
     mst.clear();
     DisjointSets ds(adjList.size());
+    std::vector<std::tuple<int, int, int>> edges;
 
     // Create a vector of all edges sorted by weight
-    std::vector<std::tuple<int, int, int>> edges;
-    for (auto it = adjList.begin(); it != adjList.end(); ++it) {
-        const T& fromNode = it->first;
-        const std::vector<std::pair<T, int>>& neighbors = it->second;
-        for (auto jt = neighbors.begin(); jt != neighbors.end(); ++jt) {
-            const T& toNode = jt->first;
-            const int weight = jt->second;
+    for (const auto& u : adjList) {
+        const T& fromNode = u.first;
+        const std::vector<std::pair<T, int>>& neighbors = u.second;
+        for (const auto& v : neighbors) {
+            const T& toNode = v.first;
+            const int weight = v.second;
             edges.emplace_back(weight, findIndex(fromNode), findIndex(toNode));
         }
     }
@@ -199,3 +201,4 @@ void Graph<T>::MST(std::vector<std::tuple<T, T, int>>& mst)
         }
     }
 }
+
